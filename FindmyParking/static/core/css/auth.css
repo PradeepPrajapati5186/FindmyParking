@@ -1,0 +1,187 @@
+/* ═══════════════════════════════════════
+   FindMyParking — Auth Pages
+   Simple styles for login.html / signup.html
+   Requires styles.css for tokens & reset
+═══════════════════════════════════════ */
+
+/* Page background & centering */
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  background: var(--navy);
+}
+
+/* Card */
+.auth-card {
+  width: 100%;
+  max-width: 440px;
+  background: var(--navy-mid);
+  border: 1px solid rgba(255, 255, 255, .07);
+  border-radius: var(--r-lg);
+  padding: 2.5rem 2rem;
+}
+
+/* Heading */
+.auth-card h2 {
+  font-family: var(--ff-display);
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--white);
+  letter-spacing: -.02em;
+  margin-bottom: 1.75rem;
+}
+
+/* Each field wrapper */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: .375rem;
+  margin-bottom: 1.125rem;
+}
+
+/* Django-rendered labels */
+.form-group label {
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--s400);
+}
+
+/* All inputs */
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group input[type="tel"],
+.form-group input[type="number"],
+.form-group input[type="file"],
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  background: rgba(255, 255, 255, .05);
+  border: 1px solid rgba(255, 255, 255, .1);
+  border-radius: var(--r-md);
+  padding: .75rem 1rem;
+  font-family: var(--ff-body);
+  font-size: .9rem;
+  color: var(--white);
+  transition: border-color .2s, box-shadow .2s, background .2s;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: var(--s600);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: rgba(16, 185, 129, .5);
+  background: rgba(16, 185, 129, .04);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, .1);
+}
+
+/* File input */
+.form-group input[type="file"] {
+  padding: .6rem 1rem;
+  color: var(--s400);
+  cursor: pointer;
+}
+.form-group input[type="file"]::file-selector-button {
+  font-family: var(--ff-body);
+  font-size: .78rem;
+  font-weight: 600;
+  color: var(--white);
+  background: rgba(16, 185, 129, .15);
+  border: 1px solid rgba(16, 185, 129, .3);
+  border-radius: var(--r-sm);
+  padding: .3rem .75rem;
+  margin-right: .75rem;
+  cursor: pointer;
+  transition: background .2s;
+}
+.form-group input[type="file"]::file-selector-button:hover {
+  background: rgba(16, 185, 129, .25);
+}
+
+/* Select arrow */
+.form-group select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2364748b' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right .875rem center;
+  background-color: rgba(255, 255, 255, .05);
+  padding-right: 2.5rem;
+  cursor: pointer;
+}
+.form-group select option {
+  background: var(--navy-mid);
+  color: var(--white);
+}
+
+/* Django error messages */
+.form-group .errorlist {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.form-group .errorlist li {
+  font-size: .78rem;
+  color: #f87171;
+  margin-top: .25rem;
+}
+
+/* Django help text */
+.form-group .helptext,
+.form-group small {
+  font-size: .72rem;
+  color: var(--s600);
+  margin-top: .2rem;
+  line-height: 1.5;
+}
+
+/* Submit button */
+.auth-card .btn {
+  width: 100%;
+  margin-top: .5rem;
+  padding: .875rem;
+  background: var(--emerald);
+  color: var(--white);
+  border: none;
+  border-radius: var(--r-pill);
+  font-family: var(--ff-display);
+  font-size: .95rem;
+  font-weight: 700;
+  letter-spacing: .02em;
+  cursor: pointer;
+  transition: box-shadow .25s, transform .2s, background .2s;
+}
+.auth-card .btn:hover {
+  background: var(--emerald-dark);
+  box-shadow: 0 8px 24px var(--emerald-glow);
+  transform: translateY(-1px);
+}
+.auth-card .btn:active {
+  transform: translateY(0);
+}
+
+/* "Already registered? Login" */
+.switch-link {
+  text-align: center;
+  margin-top: 1.25rem;
+  font-size: .875rem;
+  color: var(--s500);
+}
+.switch-link a {
+  color: var(--emerald);
+  font-weight: 600;
+  transition: opacity .2s;
+}
+.switch-link a:hover {
+  opacity: .75;
+}

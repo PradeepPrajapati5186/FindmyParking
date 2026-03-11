@@ -35,3 +35,6 @@ def login_view(request):
             return render(request, 'core/login.html', {'form': form})
     form = LoginForm()
     return render(request, 'core/login.html', {'form': form})
+
+def home_view(request):
+    return render(request, 'core/index.html')
