@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{% if lot %}Edit{% else %}Add{% endif %} Lot — FindMyParking{% endblock %}
+
+{% block content %}
+
+<div class="app-page">
+
+  <header class="app-header">
+    <div class="app-header-inner">
+      <div>
+        <div class="breadcrumb">
+          <a href="{% url 'home' %}" class="bc-link">HOME</a> ›
+          <a href="{% url 'parking_lots' %}" class="bc-link">LOTS</a> ›
+          {% if lot %}EDIT{% else %}ADD{% endif %}
+        </div>
+        <h1 class="app-title">{% if lot %}EDIT <em>LOT</em>{% else %}ADD <em>LOT</em>{% endif %}</h1>
+        <p class="app-sub">{% if lot %}Editing {{ lot.lot_name }}{% else %}Register a new parking lot{% endif %}</p>
+      </div>
+      {% if lot %}
+      <div style="display:flex;gap:.625rem">
+        <a href="{% url 'parking_lot_detail' lot.lot_id %}" class="ctrl-btn ctrl-btn--clr">← BACK</a>
+        <a href="{% url 'delete_parking_lot' lot.lot_id %}" class="ctrl-btn ctrl-btn--del">DELETE</a>
+      </div>
+      {% endif %}
+    </div>
+  </header>
+
+  <div class="lf-body">
+    <form method="post" enctype="multipart/form-data" class="lf-form" novalidate>
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+      <div class="lf-error-banner">{{ form.non_field_errors }}</div>
+      {% endif %}
+
+      <section class="lf-section">
+        <div class="lf-section-head">
+          <span class="lf-section-num">01</span>
+          <div><h2 class="lf-section-title">BASIC INFO</h2><p class="lf-section-sub">Name, status and cover image</p></div>
+        </div>
+        <div class="lf-fields">
+          <div class="lf-field lf-field--full">
+            <label class="lf-label">LOT NAME <span class="lf-required">*</span></label>
+            {{ form.lot_name }}
+            {% if form.lot_name.errors %}<p class="lf-error">{{ form.lot_name.errors.0 }}</p>{% endif %}
+          </div>
+          <div class="lf-field">
+            <label class="lf-label">STATUS</label>
+            {{ form.is_operational }}
+            {% if form.is_operational.errors %}<p class="lf-error">{{ form.is_operational.errors.0 }}</p>{% endif %}
+          </div>
+          <div class="lf-field">
+            <label class="lf-label">COVER IMAGE</label>
+            {% if lot.parkinglot_image %}<div class="lf-img-preview"><img src="{{ lot.parkinglot_image.url }}" alt="Current"/><span class="lf-img-name">Current — upload to replace</span></div>{% endif %}
+            {{ form.parkinglot_image }}
+            {% if form.parkinglot_image.errors %}<p class="lf-error">{{ form.parkinglot_image.errors.0 }}</p>{% endif %}
+          </div>
+        </div>
+      </section>
+
+      <section class="lf-section">
+        <div class="lf-section-head">
+          <span class="lf-section-num">02</span>
+          <div><h2 class="lf-section-title">LOCATION</h2><p class="lf-section-sub">Address, city, state, ZIP and GPS</p></div>
+        </div>
+        <div class="lf-fields">
+          <div class="lf-field lf-field--full">
+            <label class="lf-label">ADDRESS <span class="lf-required">*</span></label>
+            {{ form.address }}
+            {% if form.address.errors %}<p class="lf-error">{{ form.address.errors.0 }}</p>{% endif %}
+          </div>
+          <div class="lf-field">
+            <label class="lf-label">CITY <span class="lf-required">*</span></label>
+            {{ form.city }}
+            {% if form.city.errors %}<p class="lf-error">{{ form.city.errors.0 }}</p>{% endif %}
+          </div>
+          <div class="lf-field">
+            <label class="lf-label">STATE <span class="lf-required">*</span></label>
+            {{ form.state }}
+            {% if form.state.errors %}<p class="lf-error">{{ form.state.errors.0 }}</p>{% endif %}
+          </div>
+          <div class="lf-field">
+            <label class="lf-label">ZIPCODE <span class="lf-required">*</span></label>
+            {{ form.zipcode }}
+            {% if form.zipcode.errors %}<p class="lf-error">{{ form.zipcode.errors.0 }}</p>{% endif %}
+          </div>
+          <div class="lf-field">
+            <label class="lf-label">LATITUDE <span class="lf-opt">(optional)</span></label>
+            {{ form.latitude }}
+            {% if form.latitude.errors %}<p class="lf-error">{{ form.latitude.errors.0 }}</p>{% endif %}
+          </div>
+          <div class="lf-field">
+            <label class="lf-label">LONGITUDE <span class="lf-opt">(optional)</span></label>
+            {{ form.longitude }}
+            {% if form.longitude.errors %}<p class="lf-error">{{ form.longitude.errors.0 }}</p>{% endif %}
+          </div>
+        </div>
+      </section>
+
+      <section class="lf-section">
+        <div class="lf-section-head">
+          <span class="lf-section-num">03</span>
+          <div><h2 class="lf-section-title">TIMING & CAPACITY</h2><p class="lf-section-sub">Hours and total slot count</p></div>
+        </div>
+        <div class="lf-fields">
+          <div class="lf-field">
+            <label class="lf-label">OPENS <span class="lf-required">*</span></label>
+            {{ form.opening_time }}
+            {% if form.opening_time.errors %}<p class="lf-error">{{ form.opening_time.errors.0 }}</p>{% endif %}
+          </div>
+          <div class="lf-field">
+            <label class="lf-label">CLOSES <span class="lf-required">*</span></label>
+            {{ form.closing_time }}
+            {% if form.closing_time.errors %}<p class="lf-error">{{ form.closing_time.errors.0 }}</p>{% endif %}
+          </div>
+          <div class="lf-field">
+            <label class="lf-label">TOTAL SLOTS <span class="lf-required">*</span></label>
+            {{ form.total_slots }}
+            {% if form.total_slots.errors %}<p class="lf-error">{{ form.total_slots.errors.0 }}</p>{% endif %}
+          </div>
+          <div class="lf-field">
+            <label class="lf-label">AVAILABLE SLOTS</label>
+            {{ form.available_slots }}
+            <p class="lf-hint">Leave blank — auto-set on creation</p>
+          </div>
+        </div>
+      </section>
+
+      <div class="lf-footer">
+        <span class="lf-required-note"><span class="lf-required">*</span> Required</span>
+        <div class="lf-footer-actions">
+          <a href="{% url 'parking_lots' %}" class="ctrl-btn ctrl-btn--clr">CANCEL</a>
+          <button type="submit" class="lf-submit">
+            {% if lot %}SAVE CHANGES{% else %}CREATE LOT{% endif %}
+          </button>
+        </div>
+      </div>
+
+    </form>
+  </div>
+
+</div>
+{% endblock content %}

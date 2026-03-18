@@ -1,0 +1,212 @@
+[
+  {
+    "model": "Parkinglot.ParkingLot",
+    "pk": 1,
+    "fields": {
+      "lot_name": "City Center Parking",
+      "address": "123 Main Street",
+      "city": "Rajkot",
+      "state": "Gujarat",
+      "zipcode": "360001",
+      "latitude": 22.3039,
+      "longitude": 70.8022,
+      "total_slots": 50,
+      "available_slots": 45,
+      "opening_time": "08:00:00",
+      "closing_time": "22:00:00",
+      "is_operational": true,
+      "created_by": 2,
+      "created_at": "2026-03-15T06:00:00",
+      "updated_at": "2026-03-15T06:00:00"
+    }
+  },
+  {
+    "model": "Parkinglot.ParkingLot",
+    "pk": 2,
+    "fields": {
+      "lot_name": "Airport Premium Parking",
+      "address": "Airport Road",
+      "city": "Rajkot",
+      "state": "Gujarat",
+      "zipcode": "360007",
+      "latitude": 22.3090,
+      "longitude": 70.8000,
+      "total_slots": 120,
+      "available_slots": 100,
+      "opening_time": "06:00:00",
+      "closing_time": "23:59:00",
+      "is_operational": true,
+      "created_by": 2,
+      "created_at": "2026-03-15T06:05:00",
+      "updated_at": "2026-03-15T06:05:00"
+    }
+  },
+  {
+    "model": "Parkinglot.ParkingLot",
+    "pk": 3,
+    "fields": {
+      "lot_name": "Mall Underground Parking",
+      "address": "Galaxy Mall, Ring Road",
+      "city": "Rajkot",
+      "state": "Gujarat",
+      "zipcode": "360005",
+      "latitude": 22.3105,
+      "longitude": 70.7900,
+      "total_slots": 200,
+      "available_slots": 180,
+      "opening_time": "09:00:00",
+      "closing_time": "23:00:00",
+      "is_operational": true,
+      "created_by": 2,
+      "created_at": "2026-03-15T06:10:00",
+      "updated_at": "2026-03-15T06:10:00"
+    }
+  },
+  {
+    "model": "Parkinglot.ParkingLot",
+    "pk": 4,
+    "fields": {
+      "lot_name": "Railway Station Parking",
+      "address": "Station Road",
+      "city": "Rajkot",
+      "state": "Gujarat",
+      "zipcode": "360003",
+      "latitude": 22.3050,
+      "longitude": 70.7950,
+      "total_slots": 80,
+      "available_slots": 70,
+      "opening_time": "05:00:00",
+      "closing_time": "23:00:00",
+      "is_operational": true,
+      "created_by": 2,
+      "created_at": "2026-03-15T06:15:00",
+      "updated_at": "2026-03-15T06:15:00"
+    }
+  },
+  {
+    "model": "Parkinglot.ParkingLot",
+    "pk": 5,
+    "fields": {
+      "lot_name": "Hospital Visitor Parking",
+      "address": "Civil Hospital Campus",
+      "city": "Rajkot",
+      "state": "Gujarat",
+      "zipcode": "360002",
+      "latitude": 22.3010,
+      "longitude": 70.8100,
+      "total_slots": 60,
+      "available_slots": 55,
+      "opening_time": "00:00:00",
+      "closing_time": "23:59:00",
+      "is_operational": true,
+      "created_by": 2,
+      "created_at": "2026-03-15T06:20:00",
+      "updated_at": "2026-03-15T06:20:00"
+    }
+  },
+  {
+    "model": "Parkinglot.ParkingLot",
+    "pk": 6,
+    "fields": {
+      "lot_name": "University Campus Parking",
+      "address": "Rajkot University Grounds",
+      "city": "Rajkot",
+      "state": "Gujarat",
+      "zipcode": "360004",
+      "latitude": 22.2990,
+      "longitude": 70.8050,
+      "total_slots": 150,
+      "available_slots": 140,
+      "opening_time": "07:00:00",
+      "closing_time": "21:00:00",
+      "is_operational": true,
+      "created_by": 2,
+      "created_at": "2026-03-15T06:25:00",
+      "updated_at": "2026-03-15T06:25:00"
+    }
+  },
+  {
+    "model": "Parkinglot.ParkingLot",
+    "pk": 7,
+    "fields": {
+      "lot_name": "Stadium Parking",
+      "address": "Rajkot Cricket Stadium",
+      "city": "Rajkot",
+      "state": "Gujarat",
+      "zipcode": "360008",
+      "latitude": 22.3150,
+      "longitude": 70.8200,
+      "total_slots": 300,
+      "available_slots": 280,
+      "opening_time": "08:00:00",
+      "closing_time": "23:59:00",
+      "is_operational": true,
+      "created_by": 2,
+      "created_at": "2026-03-15T06:30:00",
+      "updated_at": "2026-03-15T06:30:00"
+    }
+  },
+  {
+    "model": "Parkinglot.ParkingLot",
+    "pk": 8,
+    "fields": {
+      "lot_name": "IT Park Parking",
+      "address": "Rajkot Tech Park",
+      "city": "Rajkot",
+      "state": "Gujarat",
+      "zipcode": "360009",
+      "latitude": 22.3200,
+      "longitude": 70.8300,
+      "total_slots": 100,
+      "available_slots": 95,
+      "opening_time": "07:00:00",
+      "closing_time": "22:00:00",
+      "is_operational": true,
+      "created_by": 2,
+      "created_at": "2026-03-15T06:35:00",
+      "updated_at": "2026-03-15T06:35:00"
+    }
+  },
+  {
+    "model": "Parkinglot.ParkingLot",
+    "pk": 9,
+    "fields": {
+      "lot_name": "Residential Society Parking",
+      "address": "Green Valley Apartments",
+      "city": "Rajkot",
+      "state": "Gujarat",
+      "zipcode": "360010",
+      "latitude": 22.3250,
+      "longitude": 70.8350,
+      "total_slots": 70,
+      "available_slots": 65,
+      "opening_time": "00:00:00",
+      "closing_time": "23:59:00",
+      "is_operational": true,
+      "created_by":   2,
+      "created_at": "2026-03-15T06:40:00",
+      "updated_at": "2026-03-15T06:40:00"
+    }
+  },
+  {
+    "model": "Parkinglot.ParkingLot",
+    "pk": 10,
+    "fields": {
+      "lot_name": "Bus Terminal Parking",
+      "address": "Rajkot Bus Depot",
+      "city": "Rajkot",
+      "state": "Gujarat",
+      "zipcode": "360011",
+      "latitude": 22.3300,
+      "longitude": 70.8400,
+      "total_slots": 90,
+      "available_slots": 85,
+      "opening_time": "05:00:00",
+      "closing_time": "23:00:00",
+      "is_operational": true,
+      "created_by":  2,
+      "created_at": "2026-03-15T06:45:00",
+      "updated_at": "2026-03-15T06:45:00"
+    }
+  }
+]

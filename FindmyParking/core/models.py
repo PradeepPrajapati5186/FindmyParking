@@ -44,7 +44,7 @@ class User(AbstractBaseUser):
     is_admin = models.BooleanField(default=False)
     date_joined = models.DateTimeField(auto_now_add=True)
     last_login = models.DateTimeField(null=True, blank=True)
-    profile_image = models.ImageField()
+    profile_image = models.ImageField(upload_to='profile_images/', null=True, blank=True)
     
     
     objects = UserManager()
