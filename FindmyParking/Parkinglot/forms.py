@@ -22,3 +22,44 @@ class ParkingLotForm(forms.ModelForm):
             'is_operational': forms.CheckboxInput(attrs={'class': 'lf-checkbox'}),
             'parkinglot_image': forms.FileInput(attrs={'class': 'lf-file'}),
         }
+class ParkingSlotForm(forms.ModelForm):
+    class Meta:
+        model = ParkingSlot
+        fields = ['slot_number', 'floor_level', 'slot_type', 'qr_code',
+                  'is_available', 'is_reserved',
+                  'hourly_rate', 'daily_rate', 'monthly_rate',
+                  'dimension_len', 'dimension_wid']
+        widgets = {
+            'slot_number':      forms.TextInput(attrs={'class': 'lf-input', 'placeholder': 'e.g. A01'}),
+            'floor_level':      forms.NumberInput(attrs={'class': 'lf-input', 'placeholder': '0'}),
+            'slot_type':        forms.Select(attrs={'class': 'lf-input'}),
+            'qr_code':          forms.TextInput(attrs={'class': 'lf-input'}),
+            'is_available':     forms.CheckboxInput(attrs={'class': 'lf-checkbox'}),
+            'is_reserved':      forms.CheckboxInput(attrs={'class': 'lf-checkbox'}),
+            'hourly_rate':      forms.NumberInput(attrs={'class': 'lf-input', 'placeholder': '40.00', 'step': '0.01'}),
+            'daily_rate':       forms.NumberInput(attrs={'class': 'lf-input', 'placeholder': '300.00', 'step': '0.01'}),
+            'monthly_rate':     forms.NumberInput(attrs={'class': 'lf-input', 'placeholder': '3500.00', 'step': '0.01'}),
+            'dimension_len': forms.NumberInput(attrs={'class': 'lf-input', 'placeholder': '5.00', 'step': '0.01'}),
+            'dimension_wid':  forms.NumberInput(attrs={'class': 'lf-input', 'placeholder': '2.50', 'step': '0.01'}),
+        }
+
+class BulkSlotForm(forms.ModelForm):
+    # Extra field for bulk creation
+    number_of_slots = forms.IntegerField(
+        min_value=1,
+        label="Number of Slots"
+    )
+
+    class Meta:
+        model = ParkingSlot
+        fields = [
+            "slot_type",
+            "floor_level",
+            "hourly_rate",
+            "daily_rate",
+            "monthly_rate",
+            "dimension_len",
+            "dimension_wid",
+        ]
+
+        
