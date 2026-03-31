@@ -97,7 +97,7 @@ def bulk_add_slots(request, lot_id):
                 filename = f"lot{lot.id}_slot{slot.slot_number}.png"
 
                 # Save QR code path into CharField
-                slot.qr_code = filename
+                slot.qr_code.save(filename , File(buffer),save  = True)
                 slot.save()
 
             return redirect("parking/slots.html", lot_id=lot.id)

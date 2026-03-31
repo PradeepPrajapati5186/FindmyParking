@@ -15,6 +15,7 @@
                 <div class="d-grid gap-2">
                     <a href="{% url 'parking_slots' lot.id %}" class="btn btn-primary">View Slots</a>
                     {% if user.user_type == 'admin' or user.user_type == 'owner' %}
+                    <a href="{% url 'add_slot' lot.id %}" class="btn btn-success">Add Slot</a>
                     <a href="{% url 'bulk_add_slots' lot.id %}" class="btn btn-success">Bulk Add Slots</a>
                     {% endif %}
                 </div>
