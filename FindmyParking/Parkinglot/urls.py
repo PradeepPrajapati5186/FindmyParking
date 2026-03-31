@@ -10,4 +10,6 @@ urlpatterns = [
     path('add_parkinglot/', views.parkingLotFormView, name='add_parkinglot'),
     path('add_slot/<int:lot_id>/', views.add_slot_view, name='add_slot'),
     path('bulk_add_slots/<int:lot_id>/', views.bulk_add_slots, name='bulk_add_slots'),
+    path('delete_slot/<int:slot_id>/', views.delete_slot_view, name='delete_slot'),
+    path('delete_lot/<int:lot_id>/', views.delete_lot_view, name='delete_lot'),
 ]

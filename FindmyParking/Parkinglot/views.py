@@ -105,3 +105,24 @@ def bulk_add_slots(request, lot_id):
         form = BulkSlotForm()
 
     return render(request, "Parkinglot/bulk_add_slots.html", {"form": form, "lot": lot})
+
+@login_required(login_url="login")
+def delete_slot_view(request, slot_id):
+    slot = get_object_or_404(ParkingSlot, id=slot_id)
+    lot_id = slot.parking_lot.id
+    
+    # Check if user is admin or owner of the parking lot
+    if request.user.user_type in ['admin', 'owner']:
+        slot.delete()
+    
+    return redirect('parking_slots', lot_id=lot_id)
+
+@login_required(login_url="login")
+def delete_lot_view(request, lot_id):
+    lot = get_object_or_404(ParkingLot, id=lot_id)
+    
+    # Check if user is admin or owner of the parking lot
+    if request.user.user_type in ['admin', 'owner'] :
+        lot.delete()
+    
+    return redirect('parking_lots')
