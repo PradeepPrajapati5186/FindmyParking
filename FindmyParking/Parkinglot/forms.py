@@ -1,5 +1,11 @@
 from django import forms
-from .models import ParkingLot, ParkingSlot, Vehicle   
+from django.core.validators import RegexValidator
+from .models import ParkingLot, ParkingSlot, Reservation, VEHICLE_TYPES
+
+VEHICLE_NUMBER_REGEX = RegexValidator(
+    regex=r'^[A-Z]{2}[0-9]{2}[A-Z]{2}[0-9]{4}$',
+    message='Enter a valid vehicle number (e.g., GJ01AB1234).'
+)
 
 class ParkingLotForm(forms.ModelForm):
     class Meta:
@@ -61,5 +67,29 @@ class BulkSlotForm(forms.ModelForm):
             "dimension_len",
             "dimension_wid",
         ]
+
+class ReservationForm(forms.ModelForm):
+    vehicle_number = forms.CharField(
+        max_length=20,
+        validators=[VEHICLE_NUMBER_REGEX],
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g. GJ01AB1234'})
+    )
+
+    class Meta:
+        model = Reservation
+        fields = ['vehicle_number', 'vehicle_type', 'reservation_type', 'start_time', 'end_time']
+        widgets = {
+            'vehicle_type': forms.Select(attrs={'class': 'form-select'}),
+            'reservation_type': forms.Select(attrs={'class': 'form-select'}),
+            'start_time': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
+            'end_time': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
+        }
+
+    def clean_vehicle_number(self):
+        vehicle_number = self.cleaned_data.get('vehicle_number')
+        if vehicle_number:
+            return vehicle_number.upper()
+        return vehicle_number
+
 
         

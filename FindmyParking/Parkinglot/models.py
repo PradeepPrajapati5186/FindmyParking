@@ -1,5 +1,12 @@
 from django.db import models
-from core.models import User  
+from core.models import User
+
+VEHICLE_TYPES = [
+    ('car', 'Car'),
+    ('bike', 'Bike'),
+    ('truck', 'Truck'),
+    ('suv', 'SUV'),
+]
 
 class ParkingLot(models.Model):
     lot_name = models.CharField(max_length=100)
@@ -67,7 +74,8 @@ class Vehicle(models.Model):
 class Reservation(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reservations")
     parking_slot = models.ForeignKey(ParkingSlot, on_delete=models.CASCADE, related_name="reservations")
-    vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE, related_name="reservations")
+    vehicle_number = models.CharField(max_length=20, blank=True, default='')
+    vehicle_type = models.CharField(max_length=20, choices=VEHICLE_TYPES, default='car')
     reservation_type = models.CharField(max_length=20, choices=[
         ('hourly', 'Hourly'),
         ('daily', 'Daily'),

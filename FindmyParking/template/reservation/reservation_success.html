@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% block title %}Reservation Confirmed - Smart Parking{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-7">
+        <div class="alert alert-success text-center mb-4">
+            <h4 class="mb-1">&#10004; Reservation Confirmed</h4>
+            <p class="mb-0">Your parking spot has been successfully reserved.</p>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Booking Details</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <strong>Booking Reference:</strong>
+                    </div>
+                    <div class="col-6">
+                        <code class="fs-6">{{ reservation.booking_reference }}</code>
+                    </div>
+                </div>
+
+                <hr>
+
+                <h6 class="mb-3">Parking Slot</h6>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <strong>Slot Number:</strong>
+                    </div>
+                    <div class="col-6">
+                        {{ reservation.parking_slot.slot_number }}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <strong>Parking Lot:</strong>
+                    </div>
+                    <div class="col-6">
+                        {{ reservation.parking_slot.parking_lot.lot_name }}
+                    </div>
+                </div>
+
+                <hr>
+
+                <h6 class="mb-3">Vehicle</h6>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <strong>Vehicle Number:</strong>
+                    </div>
+                    <div class="col-6">
+                        {{ reservation.vehicle_number }}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <strong>Vehicle Type:</strong>
+                    </div>
+                    <div class="col-6">
+                        {{ reservation.vehicle_type|title }}
+                    </div>
+                </div>
+
+                <hr>
+
+                <h6 class="mb-3">Reservation Details</h6>
+                <div class="row mb-2">
+                    <div class="col-6">
+                        <strong>Reservation Type:</strong>
+                    </div>
+                    <div class="col-6">
+                        {{ reservation.reservation_type|title }}
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-6">
+                        <strong>Start Time:</strong>
+                    </div>
+                    <div class="col-6">
+                        {{ reservation.start_time|date:"M d, Y H:i" }}
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-6">
+                        <strong>End Time:</strong>
+                    </div>
+                    <div class="col-6">
+                        {{ reservation.end_time|date:"M d, Y H:i" }}
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-6">
+                        <strong>Duration:</strong>
+                    </div>
+                    <div class="col-6">
+                        {{ reservation.duration }}
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-6">
+                        <strong>Status:</strong>
+                    </div>
+                    <div class="col-6">
+                        <span class="badge bg-success">{{ reservation.status|title }}</span>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-6">
+                        <strong>Total Amount:</strong>
+                    </div>
+                    <div class="col-6">
+                        &#8377;{{ reservation.total_amount }}
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer d-flex justify-content-center gap-2">
+                <a href="{% url 'cancel_reservation' reservation.id %}" class="btn btn-danger">Cancel Reservation</a>
+                <a href="{% url 'pay_reservation' reservation.id %}" class="btn btn-success">Pay Now</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

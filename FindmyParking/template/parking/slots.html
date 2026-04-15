@@ -31,6 +31,11 @@
                     {% endif %}
                 </p>
                 <small class="text-muted">₹{{ slot.hourly_rate }}/hr</small>
+                {% if slot.is_available and user.user_type == 'user' %}
+                <div class="mt-2">
+                    <a href="{% url 'start_reservation' slot_id=slot.id %}" class="btn btn-sm btn-primary">Book Now</a>
+                </div>
+                {% endif %}
                 {% if user.user_type == 'admin' or user.user_type == 'owner' %}
                 <div class="mt-2">
                     <a href="{% url 'delete_slot' slot.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this slot?')">Delete</a>

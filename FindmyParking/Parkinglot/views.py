@@ -1,12 +1,15 @@
+import math
+
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.db import models
-from .models import ParkingLot, ParkingSlot, Vehicle
-from .forms import ParkingLotForm, ParkingSlotForm, BulkSlotForm
+from django.db import models    
+from .models import ParkingLot, ParkingSlot, Reservation
+from .forms import ParkingLotForm, ParkingSlotForm, BulkSlotForm, ReservationForm
 from django.shortcuts import get_object_or_404, redirect
 import qrcode
 from io import BytesIO
 from django.core.files import File
+from django.utils.crypto import get_random_string
 # Create your views here.
 @login_required(login_url="login") #check in core.urls.py login name should exist..
 def ownerDashboardView(request):
@@ -126,3 +129,59 @@ def delete_lot_view(request, lot_id):
         lot.delete()
     
     return redirect('parking_lots')
+
+@login_required(login_url="login")
+def start_reservation(request, slot_id):
+    # Direct to reservation form with slot pre-filled
+    return redirect('create_reservation', slot_id=slot_id)
+
+@login_required(login_url="login")
+def create_reservation(request, slot_id):
+    slot = get_object_or_404(ParkingSlot, id=slot_id)
+    if request.method == 'POST':
+        form = ReservationForm(request.POST)
+        if form.is_valid():
+            reservation = form.save(commit=False)
+            reservation.user = request.user
+            reservation.parking_slot = slot
+            reservation.booking_reference = get_random_string(10).upper()
+            reservation.duration = reservation.end_time - reservation.start_time
+            reservation.status = 'pending'
+            
+            # Calculate total_amount based on reservation_type
+            if reservation.reservation_type == 'hourly':
+                hours = reservation.duration.total_seconds() / 3600
+                rounded_hours = math.ceil(hours)  # round up to next full hour
+                reservation.total_amount = rounded_hours * slot.hourly_rate  # hourly rate ₹100
+                
+            elif reservation.reservation_type == 'daily':
+                reservation.total_amount = slot.daily_rate
+            else:
+                reservation.total_amount = slot.monthly_rate
+            
+            reservation.save()
+            return redirect('reservation_success', reservation_id=reservation.id)
+    else:
+        form = ReservationForm()
+
+    return render(request, 'reservation/reservation.html', {'form': form, 'slot': slot})
+
+
+def reservation_success(request, reservation_id):
+
+    reservation = Reservation.objects.get(id=reservation_id)
+    return render(request, 'reservation/reservation_success.html', {'reservation': reservation})
+
+def cancel_reservation(request, reservation_id):
+    reservation = get_object_or_404(Reservation, id=reservation_id, user=request.user)
+    # mark as cancelled
+    reservation.status = "cancelled"
+    reservation.save()
+    return render(request, "reservation/cancel_success.html", {"reservation": reservation})
+
+def pay_reservation(request, reservation_id):
+    reservation = get_object_or_404(Reservation, id=reservation_id, user=request.user)
+    # for demo: mark as paid
+    reservation.status = "paid"
+    reservation.save()
+    return render(request, "reservation/payment_success.html", {"reservation": reservation})
