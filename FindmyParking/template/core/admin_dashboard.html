@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard — Find My Parking{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Admin Dashboard</h2>
+
+<!-- Stats Cards -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card text-white bg-info mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Total Parking Lots</h5>
+                <p class="card-text display-6">{{ total_lots }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Total Reservations</h5>
+                <p class="card-text display-6">{{ total_reservations }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Total Revenue</h5>
+                <p class="card-text display-6">${{ total_revenue|floatformat:2 }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart -->
+{% if chart_image %}
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0">Slot Availability Overview</h5>
+    </div>
+    <div class="card-body text-center">
+        <img src="data:image/png;base64,{{ chart_image }}" alt="Slots Chart" class="img-fluid" />
+    </div>
+</div>
+{% endif %}
+
+<!-- Reservations Table -->
+<h4 class="mb-3">All Reservations</h4>
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>Booking Ref</th>
+                <th>User</th>
+                <th>Parking Lot</th>
+                <th>Slot</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Status</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for res in reservations %}
+            <tr>
+                <td>{{ res.booking_reference }}</td>
+                <td>{{ res.user.email }}</td>
+                <td>{{ res.parking_slot.parking_lot.lot_name }}</td>
+                <td>{{ res.parking_slot.slot_number }}</td>
+                <td>{{ res.start_time|date:"M d, Y H:i" }}</td>
+                <td>{{ res.end_time|date:"M d, Y H:i" }}</td>
+                <td>
+                    <span class="badge bg-{% if res.status == 'confirmed' or res.status == 'active' %}success{% elif res.status == 'cancelled' %}danger{% else %}warning{% endif %}">
+                        {{ res.status|title }}
+                    </span>
+                </td>
+                <td>${{ res.total_amount }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8" class="text-center text-muted">No reservations yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

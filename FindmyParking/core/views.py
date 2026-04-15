@@ -26,7 +26,7 @@ def login_view(request):
             if user is not None:
                 login(request, user)
                 if user.user_type == "owner":
-                    return redirect("owner_dashboard")
+                    return redirect("admin_dashboard")
                 else:
                     return redirect("user_dashboard")
             else:

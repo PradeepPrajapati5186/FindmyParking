@@ -1,10 +1,11 @@
 from django.contrib import admin
 from django.urls import path
 from . import views
+from . import dashboard_views
 
 urlpatterns = [
-    path('owner_dashboard/', views.ownerDashboardView, name='owner_dashboard'),
-    path('user_dashboard/', views.userDashboardView, name='user_dashboard'),
+    path('admin_dashboard/', dashboard_views.adminDashboardView, name='admin_dashboard'),
+    path('user_dashboard/', dashboard_views.userDashboardView, name='user_dashboard'),
     path('parkinglots/', views.parkingLotsView, name='parking_lots'),
     path('parkingslots/<int:lot_id>/', views.parkingSlotsView, name='parking_slots'),
     path('add_parkinglot/', views.parkingLotFormView, name='add_parkinglot'),

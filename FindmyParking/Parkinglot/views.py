@@ -16,7 +16,7 @@ from django.core.files import File
 from django.utils.crypto import get_random_string
 # Create your views here.
 @login_required(login_url="login") #check in core.urls.py login name should exist..
-def ownerDashboardView(request):
+def adminDashboardView(request):
     return render(request, "Parkinglot/owner_dashboard.html")
 
 @login_required(login_url="login")
