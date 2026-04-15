@@ -29,6 +29,10 @@ class ParkingLot(models.Model):
     def __str__(self):
         return self.lot_name
 
+    def get_available_slots_count(self):
+        """Calculate available slots dynamically based on is_available field."""
+        return self.slots.filter(is_available=True).count()
+
 class ParkingSlot(models.Model):
     parking_lot = models.ForeignKey(ParkingLot, on_delete=models.CASCADE, related_name="slots")
     slot_number = models.CharField(max_length=10)

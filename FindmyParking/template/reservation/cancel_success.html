@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}Reservation Cancelled - Find My Parking{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-7">
+        <div class="alert alert-danger text-center mb-4">
+            <h4 class="mb-1">&#10008; Reservation Cancelled</h4>
+            <p class="mb-0">Reservation {{ reservation.booking_reference }} has been cancelled successfully.</p>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Cancellation Details</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <strong>Booking Reference:</strong>
+                    </div>
+                    <div class="col-6">
+                        <code class="fs-6">{{ reservation.booking_reference }}</code>
+                    </div>
+                </div>
+
+                <hr>
+
+                <h6 class="mb-3">Vehicle</h6>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <strong>Vehicle Number:</strong>
+                    </div>
+                    <div class="col-6">
+                        {{ reservation.vehicle_number }}
+                    </div>
+                </div>
+
+                <hr>
+
+                <h6 class="mb-3">Parking Slot</h6>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <strong>Slot Number:</strong>
+                    </div>
+                    <div class="col-6">
+                        {{ reservation.parking_slot.slot_number }}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <strong>Parking Lot:</strong>
+                    </div>
+                    <div class="col-6">
+                        {{ reservation.parking_slot.parking_lot.lot_name }}
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="row mb-2">
+                    <div class="col-6">
+                        <strong>Status:</strong>
+                    </div>
+                    <div class="col-6">
+                        <span class="badge bg-danger">Cancelled</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer d-flex justify-content-center">
+                <a href="{% url 'parking_lots'%}" class="btn btn-primary">Back to Slots</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

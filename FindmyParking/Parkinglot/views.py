@@ -2,10 +2,14 @@ import math
 
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.db import models    
+from django.db import models
+from django.db.models import Q
+from django.db.models.functions import Cast
+from django.db.models import IntegerField
 from .models import ParkingLot, ParkingSlot, Reservation
 from .forms import ParkingLotForm, ParkingSlotForm, BulkSlotForm, ReservationForm
 from django.shortcuts import get_object_or_404, redirect
+from django.core.paginator import Paginator
 import qrcode
 from io import BytesIO
 from django.core.files import File
@@ -20,8 +24,27 @@ def userDashboardView(request):
     return render(request, "Parkinglot/user_dashboard.html")
 
 def parkingLotsView(request):
-    lot = ParkingLot.objects.all()
-    return render(request, "parking/parkinglots.html", {"lot": lot})
+    query = request.GET.get('q', '').strip()
+    if query:
+        lots = ParkingLot.objects.filter(
+            Q(lot_name__icontains=query) | Q(city__icontains=query)
+        )
+    else:
+        lots = ParkingLot.objects.all()
+
+    # Calculate available slots dynamically for each lot
+    for lot in lots:
+        lot.available_slots = lot.get_available_slots_count()
+
+    # Paginate results (6 lots per page)
+    paginator = Paginator(lots, 6)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, "parking/parkinglots.html", {
+        "page_obj": page_obj,
+        "query": query
+    })
 
 
 def parkingLotFormView(request):
@@ -38,8 +61,20 @@ def parkingLotFormView(request):
 
 def parkingSlotsView(request, lot_id):
     lot = get_object_or_404(ParkingLot, id=lot_id)
-    slots = ParkingSlot.objects.filter(parking_lot=lot)
-    return render(request, "parking/slots.html", {"slots": slots, "lot": lot})
+    # Order slots numerically by slot_number, with available slots first
+    slots = ParkingSlot.objects.filter(parking_lot=lot).annotate(
+        slot_num=Cast('slot_number', IntegerField())
+    ).order_by('-is_available', 'slot_num')
+
+    # Paginate results (10 slots per page)
+    paginator = Paginator(slots, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, "parking/slots.html", {
+        "page_obj": page_obj,
+        "lot": lot
+    })
 
 def add_slot_view(request, lot_id):
     lot = get_object_or_404(ParkingLot, id=lot_id)
@@ -147,19 +182,24 @@ def create_reservation(request, slot_id):
             reservation.booking_reference = get_random_string(10).upper()
             reservation.duration = reservation.end_time - reservation.start_time
             reservation.status = 'pending'
-            
+
             # Calculate total_amount based on reservation_type
             if reservation.reservation_type == 'hourly':
                 hours = reservation.duration.total_seconds() / 3600
                 rounded_hours = math.ceil(hours)  # round up to next full hour
                 reservation.total_amount = rounded_hours * slot.hourly_rate  # hourly rate ₹100
-                
+
             elif reservation.reservation_type == 'daily':
                 reservation.total_amount = slot.daily_rate
             else:
                 reservation.total_amount = slot.monthly_rate
-            
+
             reservation.save()
+            
+            # Mark slot as unavailable when reservation is created
+            slot.is_available = False
+            slot.save()
+            
             return redirect('reservation_success', reservation_id=reservation.id)
     else:
         form = ReservationForm()
@@ -177,6 +217,12 @@ def cancel_reservation(request, reservation_id):
     # mark as cancelled
     reservation.status = "cancelled"
     reservation.save()
+    
+    # Mark the associated slot as available again
+    slot = reservation.parking_slot
+    slot.is_available = True
+    slot.save()
+    
     return render(request, "reservation/cancel_success.html", {"reservation": reservation})
 
 def pay_reservation(request, reservation_id):
