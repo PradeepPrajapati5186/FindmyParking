@@ -23,5 +23,6 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("core/", include("core.urls")),
     path("parking/", include("Parkinglot.urls")),
-    path("", views.home_view, name="home"),
+    path("", views.landingPageView, name="landing"),
+    path("home/", views.landingPageView, name="home"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -2,6 +2,7 @@ from django.shortcuts import render
 from .forms import SignupForm, LoginForm
 from django.shortcuts import redirect
 from django.contrib.auth import login,authenticate
+from django.contrib.auth import logout
 
 
 def signup_view(request):
@@ -35,6 +36,13 @@ def login_view(request):
             return render(request, 'core/login.html', {'form': form})
     form = LoginForm()
     return render(request, 'core/login.html', {'form': form})
+
+def landingPageView(request):
+    return render(request, "landing.html")
+
+def logout_view(request):
+    logout(request)
+    return redirect("landing")
 
 def home_view(request):
     return render(request, 'core/index.html')
