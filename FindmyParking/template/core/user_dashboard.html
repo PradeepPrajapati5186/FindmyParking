@@ -38,6 +38,7 @@
                 <th>End Time</th>
                 <th>Status</th>
                 <th>Amount</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -53,11 +54,18 @@
                         {{ res.status|title }}
                     </span>
                 </td>
-                <td>${{ res.total_amount }}</td>
+                <td>&#8377;{{ res.total_amount }}</td>
+                <td>
+                    {% if res.status == 'pending' %}
+                        <a href="{% url 'pay_reservation' res.id %}" class="btn btn-sm btn-success">Pay Now</a>
+                    {% else %}
+                        <span class="text-muted">-</span>
+                    {% endif %}
+                </td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="7" class="text-center text-muted">No reservations yet.</td>
+                <td colspan="8" class="text-center text-muted">No reservations yet.</td>
             </tr>
             {% endfor %}
         </tbody>

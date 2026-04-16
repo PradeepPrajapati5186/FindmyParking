@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}Payment Successful - Smart Parking{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-7">
+        <div class="alert alert-success text-center mb-4 mt-4">
+            <h4 class="mb-1">&#10004; Payment Successful</h4>
+            <p class="mb-0">Your payment has been successfully processed and your reservation is now active.</p>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Reservation Details</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-6">
+                        <strong>Booking Reference:</strong>
+                    </div>
+                    <div class="col-6">
+                        <code class="fs-6">{{ reservation.booking_reference }}</code>
+                    </div>
+                </div>
+                <hr>
+                <div class="row mb-2">
+                    <div class="col-6">
+                        <strong>Parking Slot:</strong>
+                    </div>
+                    <div class="col-6">
+                        {{ reservation.parking_slot.slot_number }} ({{ reservation.parking_slot.parking_lot.lot_name }})
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-6">
+                        <strong>Total Amount Paid:</strong>
+                    </div>
+                    <div class="col-6 text-success font-weight-bold">
+                        &#8377;{{ reservation.total_amount }}
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-6">
+                        <strong>Status:</strong>
+                    </div>
+                    <div class="col-6">
+                        <span class="badge bg-success">{{ reservation.status|title }}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer d-flex justify-content-center gap-2">
+                <a href="{% url 'user_dashboard' %}" class="btn btn-primary">Go to Dashboard</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

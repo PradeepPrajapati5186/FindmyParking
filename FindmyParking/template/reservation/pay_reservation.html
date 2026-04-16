@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Complete Payment - Smart Parking{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card shadow-sm mt-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Complete Your Payment</h5>
+            </div>
+            <div class="card-body text-center">
+                <h4 class="mb-3">Booking ID: {{ reservation.booking_reference }}</h4>
+                <h2 class="mb-4 text-success">&#8377;{{ reservation.total_amount }}</h2>
+                <p>You are paying for Parking Slot: <strong>{{ reservation.parking_slot.slot_number }}</strong></p>
+                
+                <form action="{% url 'verify_payment' %}" method="POST" class="mt-3">
+                    <script
+                        src="https://checkout.razorpay.com/v1/checkout.js"
+                        data-key="{{ razorpay_merchant_key }}"
+                        data-amount="{{ razorpay_amount }}"
+                        data-currency="{{ currency }}"
+                        data-order_id="{{ razorpay_order_id }}"
+                        data-buttontext="Pay Now"
+                        data-name="Smart Parking"
+                        data-description="Parking Reservation Payment"
+                        data-prefill.name="{{ request.user.firstname }} {{ request.user.lastname }}"
+                        data-prefill.email="{{ request.user.email }}"
+                        data-prefill.contact="{{ request.user.phonenumber }}"
+                        data-theme.color="#198754">
+                    </script>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

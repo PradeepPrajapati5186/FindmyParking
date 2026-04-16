@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Payment Failed - Smart Parking{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-7">
+        <div class="alert alert-danger text-center mb-4 mt-4">
+            <h4 class="mb-1">&#10008; Payment Failed</h4>
+            <p class="mb-0">We could not verify your payment. Note that the transaction might be incomplete or failed.</p>
+        </div>
+
+        <div class="card shadow-sm border-danger">
+            <div class="card-body text-center">
+                <h5>What should I do?</h5>
+                <p>You can try paying again from your dashboard. If the amount was deducted from your bank, it will be refunded within 5-7 business days.</p>
+            </div>
+            <div class="card-footer d-flex justify-content-center gap-2">
+                <a href="{% url 'user_dashboard' %}" class="btn btn-outline-danger">Return to Dashboard</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

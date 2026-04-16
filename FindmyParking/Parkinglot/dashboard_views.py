@@ -17,11 +17,13 @@ from django.db.models import Sum, Count, Q
 from django.utils import timezone
 
 from Parkinglot.models import Reservation, Payment, ParkingLot
+from .views import release_expired_slots
 
 
 @login_required
 def userDashboardView(request):
     """User dashboard — shows personal reservations and payment stats."""
+    release_expired_slots()
     user = request.user
 
     reservations = Reservation.objects.filter(user=user).select_related(
@@ -42,6 +44,7 @@ def userDashboardView(request):
 @staff_member_required
 def adminDashboardView(request):
     """Admin dashboard — system overview with revenue and slot chart."""
+    release_expired_slots()
     # Aggregate stats
     total_lots = ParkingLot.objects.count()
     total_reservations = Reservation.objects.count()

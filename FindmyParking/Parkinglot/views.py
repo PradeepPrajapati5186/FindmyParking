@@ -1,4 +1,7 @@
 import math
+import razorpay
+from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
 
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
@@ -6,7 +9,8 @@ from django.db import models
 from django.db.models import Q
 from django.db.models.functions import Cast
 from django.db.models import IntegerField
-from .models import ParkingLot, ParkingSlot, Reservation
+from django.utils import timezone
+from .models import ParkingLot, ParkingSlot, Reservation, Payment
 from .forms import ParkingLotForm, ParkingSlotForm, BulkSlotForm, ReservationForm
 from django.shortcuts import get_object_or_404, redirect
 from django.core.paginator import Paginator
@@ -23,7 +27,23 @@ def adminDashboardView(request):
 def userDashboardView(request):
     return render(request, "Parkinglot/user_dashboard.html")
 
+def release_expired_slots():
+    """Utility to free up slots whose active reservations have expired."""
+    now = timezone.now()
+    expired_reservations = Reservation.objects.filter(
+        end_time__lt=now,
+        status__in=['active', 'confirmed']
+    )
+    for res in expired_reservations:
+        res.status = 'completed'
+        res.save(update_fields=['status'])
+        
+        slot = res.parking_slot
+        slot.is_available = True
+        slot.save(update_fields=['is_available'])
+
 def parkingLotsView(request):
+    release_expired_slots()
     query = request.GET.get('q', '').strip()
     if query:
         lots = ParkingLot.objects.filter(
@@ -60,6 +80,7 @@ def parkingLotFormView(request):
     return render(request, "Parkinglot/parkinglot_form.html", {"form": form})
 
 def parkingSlotsView(request, lot_id):
+    release_expired_slots()
     lot = get_object_or_404(ParkingLot, id=lot_id)
     # Order slots numerically by slot_number, with available slots first
     slots = ParkingSlot.objects.filter(parking_lot=lot).annotate(
@@ -227,7 +248,64 @@ def cancel_reservation(request, reservation_id):
 
 def pay_reservation(request, reservation_id):
     reservation = get_object_or_404(Reservation, id=reservation_id, user=request.user)
-    # for demo: mark as paid
-    reservation.status = "paid"
-    reservation.save()
-    return render(request, "reservation/payment_success.html", {"reservation": reservation})
+    
+    # Initialize razorpay client
+    client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+    
+    payment_amount = int(reservation.total_amount * 100)
+    
+    # Create order
+    razorpay_order = client.order.create({
+        "amount": payment_amount,
+        "currency": "INR",
+        "receipt": f"receipt_{reservation.id}",
+        "payment_capture": "1"
+    })
+    
+    Payment.objects.create(
+        reservation=reservation,
+        user=request.user,
+        amount=reservation.total_amount,
+        payment_method='',
+        payment_status='pending',
+        transaction_id=razorpay_order['id'],
+        payment_gateway='razorpay'
+    )
+    
+    context = {
+        "reservation": reservation,
+        "razorpay_order_id": razorpay_order['id'],
+        "razorpay_merchant_key": settings.RAZORPAY_KEY_ID,
+        "razorpay_amount": payment_amount,
+        "currency": "INR",
+    }
+    return render(request, "reservation/pay_reservation.html", context)
+
+@csrf_exempt
+def verify_payment(request):
+    if request.method == "POST":
+        razorpay_payment_id = request.POST.get('razorpay_payment_id', '')
+        razorpay_order_id = request.POST.get('razorpay_order_id', '')
+        razorpay_signature = request.POST.get('razorpay_signature', '')
+
+        client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET))
+        params_dict = {
+            'razorpay_order_id': razorpay_order_id,
+            'razorpay_payment_id': razorpay_payment_id,
+            'razorpay_signature': razorpay_signature
+        }
+
+        try:
+            client.utility.verify_payment_signature(params_dict)
+            payment = Payment.objects.get(transaction_id=razorpay_order_id)
+            payment.payment_status = 'completed'
+            payment.save()
+            
+            reservation = payment.reservation
+            reservation.status = 'active'
+            reservation.save()
+
+            return render(request, "reservation/payment_success.html", {"reservation": reservation})
+        except razorpay.errors.SignatureVerificationError:
+            return render(request, "reservation/payment_failed.html", {})
+    return redirect("parking_lots")
