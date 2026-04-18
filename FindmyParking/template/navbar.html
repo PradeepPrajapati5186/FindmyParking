@@ -1,0 +1,76 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top" style="transition: all 0.3s ease;">
+    <div class="container">
+        <!-- Brand -->
+        <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="{% url 'landing' %}">
+            <div class="bg-primary text-white rounded d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                <i class="bi bi-geo-alt-fill"></i>
+            </div>
+            <span class="text-primary fs-5" style="letter-spacing: -0.5px;">Find my parking</span>
+        </a>
+
+        <!-- Toggler -->
+        <button class="navbar-toggler border-0 shadow-none px-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Links -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="navbar-nav mx-auto fw-medium">
+                <a class="nav-link px-3" href="{% url 'landing' %}">Home</a>
+                <a class="nav-link px-3" href="{% url 'parking_lots' %}">Parking Lots</a>
+                {% if user.is_authenticated %}
+                    {% if user.user_type == 'owner' or user.is_admin %}
+                        <a class="nav-link px-3" href="{% url 'admin_dashboard' %}">Dashboard</a>
+                    {% else %}
+                        <a class="nav-link px-3" href="{% url 'user_dashboard' %}">Dashboard</a>
+                    {% endif %}
+                {% endif %}
+            </div>
+
+            <!-- Profile / Auth -->
+            <div class="navbar-nav align-items-center gap-2 mt-3 mt-lg-0 pb-3 pb-lg-0">
+                {% if user.is_authenticated %}
+                    <span class="navbar-text text-muted me-2 d-none d-lg-block">
+                        Welcome, <strong class="text-dark">{{ user.firstname }}</strong>
+                    </span>
+                    <a class="btn btn-outline-danger btn-sm rounded-pill px-4 fw-medium" href="{% url 'logout' %}">
+                        Logout
+                    </a>
+                {% else %}
+                    <a class="nav-link fw-medium" href="{% url 'login' %}">Login</a>
+                    <a class="btn btn-primary rounded-pill px-4 fw-medium shadow-sm transition-navbar-btn" href="{% url 'signup' %}">
+                        Sign Up
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>
+
+<style>
+/* Navbar custom styling */
+.navbar .nav-link {
+    transition: color 0.2s ease, transform 0.2s ease;
+    border-radius: 0.5rem;
+}
+.navbar .nav-link:hover {
+    color: var(--bs-primary) !important;
+    background-color: rgba(13, 110, 253, 0.05); /* very light primary */
+}
+.transition-navbar-btn {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.transition-navbar-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(13,110,253,0.3) !important;
+}
+@media (max-width: 991.98px) {
+    .navbar-collapse {
+        background-color: white;
+        padding: 1rem;
+        border-radius: 1rem;
+        box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.05);
+        margin-top: 0.5rem;
+    }
+}
+</style>
