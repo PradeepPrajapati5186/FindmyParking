@@ -129,5 +129,5 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 # Razorpay Configuration
-RAZORPAY_KEY_ID = ''
-RAZORPAY_KEY_SECRET = ''
+RAZORPAY_KEY_ID = 'rzp_test_Sdm0J7GJnDBYru'
+RAZORPAY_KEY_SECRET = 'Z2mhZvkvv1bxNtoPd5HI0S2M'

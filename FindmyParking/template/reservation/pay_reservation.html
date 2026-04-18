@@ -23,22 +23,47 @@
             <span class="fw-bold">{{ reservation.parking_slot.slot_number }}</span>
         </div>
         
-        <form action="{% url 'verify_payment' %}" method="POST" class="d-grid">
-            <script
-                src="https://checkout.razorpay.com/v1/checkout.js"
-                data-key="{{ razorpay_merchant_key }}"
-                data-amount="{{ razorpay_amount }}"
-                data-currency="{{ currency }}"
-                data-order_id="{{ razorpay_order_id }}"
-                data-buttontext="Pay Now"
-                data-name="Findmy Parking"
-                data-description="Parking Reservation Payment"
-                data-prefill.name="{{ request.user.firstname }} {{ request.user.lastname }}"
-                data-prefill.email="{{ request.user.email }}"
-                data-prefill.contact="{{ request.user.phonenumber }}"
-                data-theme.color="#3b82f6">
-            </script>
+        <form action="{% url 'verify_payment' %}" method="POST" id="razorpay-form" class="d-grid">
+            {% csrf_token %}
+            <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id">
+            <input type="hidden" name="razorpay_order_id" id="razorpay_order_id" value="{{ razorpay_order_id }}">
+            <input type="hidden" name="razorpay_signature" id="razorpay_signature">
+            <button type="button" id="rzp-button1" class="btn btn-primary btn-lg rounded-pill fw-bold shadow-sm py-3 mt-2">Pay Now with Razorpay</button>
         </form>
+
+        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+        <script>
+        var options = {
+            "key": "{{ razorpay_merchant_key }}",
+            "amount": "{{ razorpay_amount }}",
+            "currency": "{{ currency }}",
+            "name": "Find my parking",
+            "description": "Parking Reservation Payment",
+            "order_id": "{{ razorpay_order_id }}",
+            "handler": function (response){
+                document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
+                document.getElementById('razorpay_signature').value = response.razorpay_signature;
+                document.getElementById('razorpay-form').submit();
+            },
+            "prefill": {
+                "name": "{{ request.user.firstname|default:'' }} {{ request.user.lastname|default:'' }}",
+                "email": "{{ request.user.email|default:'' }}",
+                "contact": "{{ request.user.phonenumber|default:'' }}"
+            },
+            "theme": {
+                "color": "#0d6efd"
+            }
+        };
+        var rzp1 = new Razorpay(options);
+        rzp1.on('payment.failed', function (response){
+                console.error(response.error);
+                alert("Payment fail: " + response.error.description);
+        });
+        document.getElementById('rzp-button1').onclick = function(e){
+            rzp1.open();
+            e.preventDefault();
+        }
+        </script>
     </div>
 </div>
 {% endblock %}

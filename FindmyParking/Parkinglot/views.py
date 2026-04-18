@@ -159,7 +159,7 @@ def bulk_add_slots(request, lot_id):
                 slot.qr_code.save(filename , File(buffer),save  = True)
                 slot.save()
 
-            return redirect("parking/slots.html", lot_id=lot.id)
+            return redirect("parking_slots", lot_id=lot.id)
     else:
         form = BulkSlotForm()
 
